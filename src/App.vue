@@ -110,8 +110,8 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue'
-import Analytics from '@vercel/analytics/vue';
-import SpeedInsights from '@vercel/speed-insights/vue';
+import { Analytics } from '@vercel/analytics/vue';
+import { SpeedInsights } from '@vercel/speed-insights/vue';
 import SmartCard from './components/SmartCard.vue'
 import SearchBox from './components/SearchBox.vue'
 
