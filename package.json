@@ -1,0 +1,21 @@
+{
+  "name": "vue3-navigation-dashboard",
+  "version": "1.0.0",
+  "description": "纯前端Vue3导航项目，带随机移动卡片",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@vercel/analytics": "^1.6.1",
+    "@vercel/speed-insights": "^1.3.1",
+    "element-plus": "^2.4.0",
+    "vue": "^3.3.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.2.0",
+    "vite": "^4.4.0"
+  }
+}
