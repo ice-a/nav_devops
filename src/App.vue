@@ -72,6 +72,7 @@
           <div v-for="(card, index) in displayCards" :key="card.url + card.index" class="card-wrapper"
             :style="{ animationDelay: `${index * 0.05}s` }">
             <SmartCard :card="card" :index="index" :category-color="getCategoryColor(card.catelog)"
+              :is-invalid="linkStatus[card.url] === false"
               @click="openLink(card.url)" />
           </div>
         </div>
@@ -132,6 +133,7 @@ const allLinks = ref([])
 const loading = ref(true)
 const searchQuery = ref('')
 const selectedCategory = ref('')
+const linkStatus = ref({}) // 存储链接检测状态
 
 // 搜索功能
 const filteredCards = computed(() => {
@@ -248,6 +250,45 @@ const openLink = (url) => {
   window.open(url, '_blank')
 }
 
+// 检测单个链接是否有效
+const checkLinkStatus = async (url) => {
+  try {
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 5000)
+
+    const response = await fetch(url, {
+      method: 'HEAD',
+      mode: 'no-cors',
+      signal: controller.signal
+    })
+
+    clearTimeout(timeoutId)
+    return true
+  } catch (error) {
+    return false
+  }
+}
+
+// 批量检测所有链接
+const checkAllLinks = async () => {
+  const links = allLinks.value
+  const batchSize = 5 // 每批检测5个，避免过多请求
+
+  for (let i = 0; i < links.length; i += batchSize) {
+    const batch = links.slice(i, i + batchSize)
+    const promises = batch.map(async (link) => {
+      const isValid = await checkLinkStatus(link.url)
+      linkStatus.value[link.url] = isValid
+    })
+
+    await Promise.all(promises)
+    // 每批之间延迟 500ms，避免请求过快
+    if (i + batchSize < links.length) {
+      await new Promise(resolve => setTimeout(resolve, 500))
+    }
+  }
+}
+
 // 加载数据
 const loadLinks = async () => {
   try {
@@ -262,6 +303,8 @@ const loadLinks = async () => {
     loadFallbackData()
   } finally {
     loading.value = false
+    // 数据加载完成后开始检测链接
+    checkAllLinks()
   }
 }
 

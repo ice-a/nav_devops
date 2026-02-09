@@ -3,7 +3,8 @@
     class="smart-card"
     :class="{ 
       'is-hovered': isHovered,
-      'is-pressed': isPressed
+      'is-pressed': isPressed,
+      'is-invalid': isInvalid
     }"
     :style="cardStyle"
     @click="handleClick"
@@ -12,13 +13,13 @@
     @mousedown="handleMouseDown"
     @mouseup="handleMouseUp"
   >
-    <!-- 卡片背景装饰 -->
-    <div class="card-decoration" :style="{ background: categoryColor }"></div>
+    <!-- 卡片背景装饰 - 使用随机渐变色 -->
+    <div class="card-decoration" :style="{ background: cardGradient }"></div>
     
     <!-- 卡片内容 -->
     <div class="card-content">
       <div class="card-header">
-        <div class="category-badge" :style="{ background: categoryColor }">
+        <div class="category-badge" :style="{ background: cardGradient }">
           {{ card.catelog }}
         </div>
         <h3 class="card-title">{{ card.name }}</h3>
@@ -43,10 +44,18 @@
     </div>
 
     <!-- 悬停光效层 -->
-    <div v-if="isHovered" class="hover-glow" :style="{ background: categoryColor }"></div>
+    <div v-if="isHovered" class="hover-glow" :style="{ background: cardGradient }"></div>
     
     <!-- 点击涟漪效果 -->
-    <div v-if="isPressed" class="ripple-effect" :style="{ background: categoryColor }"></div>
+    <div v-if="isPressed" class="ripple-effect" :style="{ background: cardGradient }"></div>
+
+    <!-- 无效链接蒙版 -->
+    <div v-if="isInvalid" class="invalid-overlay">
+      <div class="invalid-content">
+        <span class="invalid-icon">✕</span>
+        <span class="invalid-text">链接失效</span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -65,6 +74,10 @@ const props = defineProps({
   categoryColor: {
     type: String,
     default: '#667eea'
+  },
+  isInvalid: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -73,6 +86,40 @@ const emit = defineEmits(['click'])
 const isHovered = ref(false)
 const isPressed = ref(false)
 const rotation = ref(0)
+
+// 预设渐变色方案
+const gradientPresets = [
+  'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+  'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+  'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+  'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+  'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+  'linear-gradient(135deg, #30cfd0 0%, #330867 100%)',
+  'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
+  'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)',
+  'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)',
+  'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+  'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)',
+  'linear-gradient(135deg, #fc466b 0%, #3f5efb 100%)',
+  'linear-gradient(135deg, #3f2b96 0%, #a8c0ff 100%)',
+  'linear-gradient(135deg, #f857a6 0%, #ff5858 100%)',
+  'linear-gradient(135deg, #00b09b 0%, #96c93d 100%)',
+  'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)',
+  'linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)',
+  'linear-gradient(135deg, #fad0c4 0%, #ffd1ff 100%)'
+]
+
+// 根据 URL 生成固定的随机渐变色
+const cardGradient = computed(() => {
+  let hash = 0
+  for (let i = 0; i < props.card.url.length; i++) {
+    const char = props.card.url.charCodeAt(i)
+    hash = ((hash << 5) - hash) + char
+    hash = hash & hash
+  }
+  const index = Math.abs(hash) % gradientPresets.length
+  return gradientPresets[index]
+})
 
 // 计算卡片样式
 const cardStyle = computed(() => {
@@ -393,6 +440,62 @@ const handleClick = (event) => {
 /* 点击反馈 */
 .smart-card:active {
   transform: scale(0.97);
+}
+
+/* 无效链接蒙版 */
+.invalid-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  border-radius: 14px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.invalid-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.invalid-icon {
+  font-size: 2.5rem;
+  color: #ff4444;
+  font-weight: bold;
+  text-shadow: 0 2px 8px rgba(255, 68, 68, 0.5);
+}
+
+.invalid-text {
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.smart-card.is-invalid {
+  cursor: not-allowed;
+}
+
+.smart-card.is-invalid .card-content {
+  opacity: 0.5;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* 响应式设计 */
