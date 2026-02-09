@@ -69,11 +69,11 @@ defineExpose({
   position: relative;
   z-index: 100;
   width: 100%;
-  max-width: 700px;
+  max-width: 600px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
 .search-box {
@@ -81,9 +81,9 @@ defineExpose({
   display: flex;
   align-items: center;
   background: rgba(255, 255, 255, 0.95);
-  border-radius: 20px;
-  padding: 12px 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  padding: 14px 18px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
   backdrop-filter: blur(10px);
   border: 2px solid transparent;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -105,7 +105,7 @@ defineExpose({
 
 .search-box.is-focused {
   border-color: #667eea;
-  box-shadow: 0 6px 30px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 8px 32px rgba(102, 126, 234, 0.35);
   transform: translateY(-2px);
 }
 
@@ -137,10 +137,10 @@ input {
   border: none;
   background: transparent;
   outline: none;
-  font-size: 1rem;
-  padding: 8px 4px;
+  font-size: 1.05rem;
+  padding: 6px 4px;
   color: #333;
-  font-weight: 500;
+  font-weight: 400;
   position: relative;
   z-index: 1;
   transition: all 0.3s ease;
@@ -235,13 +235,13 @@ input::placeholder {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
-  padding: 8px 16px;
-  border-radius: 12px;
+  padding: 6px 14px;
+  border-radius: 20px;
   color: white;
-  font-size: 0.85rem;
-  opacity: 0.9;
+  font-size: 0.8rem;
+  opacity: 0.8;
   animation: fadeIn 0.5s ease-out;
 }
 
@@ -277,54 +277,55 @@ input::placeholder {
 /* 响应式设计 */
 @media (max-width: 768px) {
   .search-container {
-    max-width: 95%;
+    max-width: 100%;
   }
-  
+
   .search-box {
-    padding: 10px 14px;
-    border-radius: 16px;
+    padding: 12px 14px;
+    border-radius: 14px;
   }
-  
+
   .search-icon {
     font-size: 1.1rem;
-    width: 20px;
-    height: 20px;
-    margin-right: 8px;
+    width: 22px;
+    height: 22px;
+    margin-right: 10px;
   }
-  
+
   input {
     font-size: 0.95rem;
   }
-  
+
   .clear-btn {
-    width: 24px;
-    height: 24px;
+    width: 26px;
+    height: 26px;
     font-size: 0.9rem;
   }
-  
+
   .stats-content {
     font-size: 0.85rem;
     padding: 8px 16px;
   }
-  
+
   .search-hint {
-    font-size: 0.8rem;
-    padding: 6px 12px;
+    font-size: 0.78rem;
+    padding: 5px 12px;
   }
 }
 
 @media (max-width: 480px) {
   .search-box {
-    padding: 8px 12px;
+    padding: 10px 12px;
+    border-radius: 12px;
   }
-  
+
   input {
     font-size: 0.9rem;
   }
-  
+
   .search-hint {
     font-size: 0.75rem;
-    background: rgba(255, 255, 255, 0.1);
+    padding: 4px 10px;
   }
 }
 

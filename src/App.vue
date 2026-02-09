@@ -18,22 +18,31 @@
 
       <!-- 搜索和过滤区域 -->
       <div class="controls-section">
-        <!-- 搜索框 -->
-        <SearchBox v-if="!loading" @search="handleSearch" @clear="handleClearSearch"
-          :filteredCount="filteredCards.length" />
-
         <!-- 智能分类标签云 -->
         <div class="tags-cloud" v-if="!loading && !searchQuery">
-          <div class="tags-wrapper">
-            <button v-for="category in displayCategories" :key="category" class="tag-item" :class="{
-              active: selectedCategory === category,
-              popular: getCategoryCount(category) > 5,
-              trending: Math.random() > 0.7
-            }" @click="selectCategory(category)">
-              <span class="tag-icon">{{ getCategoryIcon(category) }}</span>
-              {{ category }}
-              <span class="tag-count">{{ getCategoryCount(category) }}</span>
-            </button>
+          <div class="tags-scroll-container">
+            <div class="tags-wrapper">
+              <button v-for="category in displayCategories" :key="category" class="tag-item" :class="{
+                active: selectedCategory === category,
+                popular: getCategoryCount(category) > 5,
+                trending: Math.random() > 0.7
+              }" @click="selectCategory(category)">
+                <span class="tag-icon">{{ getCategoryIcon(category) }}</span>
+                {{ category }}
+                <span class="tag-count">{{ getCategoryCount(category) }}</span>
+              </button>
+            </div>
+            <div class="tags-wrapper" aria-hidden="true">
+              <button v-for="category in displayCategories" :key="category + '-dup'" class="tag-item" :class="{
+                active: selectedCategory === category,
+                popular: getCategoryCount(category) > 5,
+                trending: Math.random() > 0.7
+              }" @click="selectCategory(category)">
+                <span class="tag-icon">{{ getCategoryIcon(category) }}</span>
+                {{ category }}
+                <span class="tag-count">{{ getCategoryCount(category) }}</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -44,6 +53,10 @@
             找到 <strong>{{ filteredCards.length }}</strong> 个精准结果
           </div>
         </div>
+
+        <!-- 搜索框 -->
+        <SearchBox v-if="!loading" @search="handleSearch" @clear="handleClearSearch"
+          :filteredCount="filteredCards.length" />
       </div>
 
       <!-- 智能内容展示区 -->
@@ -413,14 +426,14 @@ onMounted(() => {
 .hero-header {
   flex-shrink: 0;
   text-align: center;
-  padding: 12px 20px;
+  padding: 24px 20px 20px;
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(20px);
-  border-radius: 0 0 20px 20px;
+  border-radius: 0 0 24px 24px;
   border: 1px solid rgba(255, 255, 255, 0.25);
   border-bottom: none;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  margin: 0 20px;
+  margin: 0 20px 16px;
 }
 
 .logo-area {
@@ -456,9 +469,10 @@ onMounted(() => {
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 16px;
   align-items: center;
   padding: 0 20px;
+  margin-bottom: 12px;
 }
 
 /* 标签云 */
@@ -466,34 +480,59 @@ onMounted(() => {
   width: 100%;
   display: flex;
   justify-content: center;
+  order: -1;
+  overflow: hidden;
+}
+
+.tags-scroll-container {
+  display: flex;
+  animation: scroll-left 80s linear infinite;
+  width: max-content;
+}
+
+.tags-scroll-container:hover {
+  animation-play-state: paused;
 }
 
 .tags-wrapper {
   display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  justify-content: center;
-  max-width: 1000px;
-  padding: 4px 0;
+  flex-wrap: nowrap;
+  gap: 10px;
+  padding: 8px 0;
+  flex-shrink: 0;
+}
+
+.tags-wrapper:last-child {
+  margin-left: 10px;
+}
+
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
 .tag-item {
-  padding: 6px 12px;
+  padding: 8px 16px;
   border: none;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(10px);
   color: white;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   align-items: center;
-  gap: 4px;
-  font-size: 0.85rem;
+  gap: 6px;
+  font-size: 0.9rem;
   position: relative;
   overflow: hidden;
   white-space: nowrap;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .tag-item::before {
@@ -512,15 +551,18 @@ onMounted(() => {
 }
 
 .tag-item:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.25);
   transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 .tag-item.active {
   background: rgba(255, 255, 255, 0.95);
   color: #667eea;
   transform: scale(1.05) translateY(-2px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  border-color: transparent;
+  font-weight: 600;
 }
 
 .tag-item.popular {
@@ -573,7 +615,7 @@ onMounted(() => {
   overflow-y: auto;
   overflow-x: hidden;
   min-height: 0;
-  padding: 10px;
+  padding: 16px;
 }
 
 /* 加载状态 */
@@ -608,9 +650,11 @@ onMounted(() => {
 /* 卡片网格 */
 .cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
-  padding: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 8px;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 .card-wrapper {
@@ -670,10 +714,11 @@ onMounted(() => {
   flex-shrink: 0;
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(20px);
-  border-radius: 20px;
+  border-radius: 20px 20px 0 0;
   border: 1px solid rgba(255, 255, 255, 0.25);
-  padding: 16px 20px;
-  margin: 0 20px 20px;
+  border-bottom: none;
+  padding: 20px 24px;
+  margin: 16px 20px 0;
 }
 
 .footer-content {
@@ -805,57 +850,106 @@ onMounted(() => {
 }
 
 /* 响应式设计 */
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
   .cards-grid {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  }
-
-  .hero-title {
-    font-size: 2.4rem;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 18px;
   }
 }
 
-@media (max-width: 768px) {
-  .main-content {
-    padding: 12px;
-    gap: 12px;
-  }
-
-  .hero-header {
-    padding: 24px 16px 16px;
+@media (max-width: 1024px) {
+  .cards-grid {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
   }
 
   .hero-title {
-    font-size: 1.8rem;
-  }
-
-  .hero-subtitle {
-    font-size: 0.95rem;
+    font-size: 2.2rem;
   }
 
   .tags-wrapper {
-    gap: 6px;
+    gap: 8px;
+  }
+
+  .tags-wrapper:last-child {
+    margin-left: 8px;
   }
 
   .tag-item {
     padding: 6px 12px;
     font-size: 0.85rem;
   }
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding: 0;
+    gap: 12px;
+  }
+
+  .hero-header {
+    padding: 20px 16px 16px;
+    margin: 0 12px 12px;
+    border-radius: 0 0 16px 16px;
+  }
+
+  .hero-title {
+    font-size: 1.6rem;
+  }
+
+  .hero-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .controls-section {
+    padding: 0 12px;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .tags-wrapper {
+    gap: 6px;
+  }
+
+  .tags-wrapper:last-child {
+    margin-left: 6px;
+  }
+
+  .tag-item {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    border-radius: 16px;
+  }
+
+  .tags-scroll-container {
+    animation-duration: 60s;
+  }
+
+  .content-section {
+    padding: 12px;
+  }
 
   .cards-grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 12px;
-    padding: 6px;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 14px;
+    padding: 4px;
+  }
+
+  .app-footer {
+    margin: 12px 12px 0;
+    padding: 16px 16px;
+    border-radius: 16px 16px 0 0;
   }
 
   .footer-content {
     flex-direction: column;
     align-items: stretch;
+    gap: 12px;
   }
 
   .stats-overview {
-    justify-content: space-between;
-    gap: 12px;
+    justify-content: center;
+    gap: 16px;
   }
 
   .quick-actions {
@@ -869,27 +963,65 @@ onMounted(() => {
 }
 
 @media (max-width: 480px) {
+  .hero-header {
+    padding: 16px 12px 12px;
+    margin: 0 8px 8px;
+  }
+
   .hero-title {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
   }
 
   .logo-icon {
-    font-size: 2rem;
+    font-size: 1.8rem;
+  }
+
+  .controls-section {
+    padding: 0 8px;
+    gap: 10px;
+  }
+
+  .tags-wrapper {
+    gap: 5px;
+  }
+
+  .tags-wrapper:last-child {
+    margin-left: 5px;
+  }
+
+  .tag-item {
+    padding: 4px 8px;
+    font-size: 0.75rem;
+  }
+
+  .tags-scroll-container {
+    animation-duration: 50s;
+  }
+
+  .content-section {
+    padding: 8px;
   }
 
   .cards-grid {
     grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .app-footer {
+    margin: 8px 8px 0;
+    padding: 12px 12px;
   }
 
   .stats-overview {
-    flex-direction: column;
-    gap: 8px;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 12px;
   }
 
   .stat-item {
-    flex-direction: row;
-    justify-content: space-between;
-    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
   }
 }
 </style>

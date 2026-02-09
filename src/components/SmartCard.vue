@@ -147,14 +147,14 @@ const handleClick = (event) => {
 .smart-card {
   position: relative;
   background: rgba(255, 255, 255, 0.98);
-  border-radius: 16px;
-  padding: 16px;
-  min-height: 140px;
+  border-radius: 14px;
+  padding: 18px;
+  min-height: 150px;
   cursor: pointer;
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   backdrop-filter: blur(10px);
   user-select: none;
   transform-style: preserve-3d;
@@ -177,8 +177,8 @@ const handleClick = (event) => {
 }
 
 .smart-card.is-hovered {
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.1);
-  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  transform: translateY(-4px);
 }
 
 .smart-card.is-pressed {
@@ -212,14 +212,14 @@ const handleClick = (event) => {
   height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 }
 
 /* 卡片头部 */
 .card-header {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .category-badge {
@@ -237,12 +237,12 @@ const handleClick = (event) => {
 }
 
 .card-title {
-  font-size: 1.05rem;
-  font-weight: 800;
+  font-size: 1.1rem;
+  font-weight: 700;
   color: #1a1a1a;
   line-height: 1.3;
   margin: 0;
-  letter-spacing: -0.3px;
+  letter-spacing: -0.2px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -253,32 +253,32 @@ const handleClick = (event) => {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
 .card-description {
-  font-size: 0.85rem;
+  font-size: 0.88rem;
   color: #555;
-  line-height: 1.4;
+  line-height: 1.5;
   margin: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
-  min-height: 2.4em;
+  min-height: 2.6em;
 }
 
 .card-url {
-  font-size: 0.75rem;
-  color: #888;
+  font-size: 0.78rem;
+  color: #777;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  padding: 4px 8px;
-  background: rgba(0, 0, 0, 0.03);
-  border-radius: 6px;
+  padding: 5px 10px;
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 8px;
   align-self: flex-start;
 }
 
@@ -398,24 +398,33 @@ const handleClick = (event) => {
 /* 响应式设计 */
 @media (max-width: 768px) {
   .smart-card {
-    padding: 12px;
-    min-height: 120px;
+    padding: 14px;
+    min-height: 130px;
     border-radius: 12px;
   }
-  
+
+  .card-content {
+    gap: 10px;
+  }
+
+  .card-header {
+    gap: 6px;
+  }
+
   .card-title {
-    font-size: 0.95rem;
+    font-size: 1rem;
   }
-  
+
   .card-description {
-    font-size: 0.8rem;
-    -webkit-line-clamp: 2;
+    font-size: 0.82rem;
+    line-height: 1.4;
   }
-  
+
   .card-url {
-    font-size: 0.7rem;
+    font-size: 0.72rem;
+    padding: 4px 8px;
   }
-  
+
   .category-badge {
     font-size: 0.65rem;
     padding: 3px 8px;
@@ -424,17 +433,21 @@ const handleClick = (event) => {
 
 @media (max-width: 480px) {
   .smart-card {
-    padding: 10px;
-    min-height: 110px;
+    padding: 12px;
+    min-height: 120px;
   }
-  
+
   .card-title {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
   }
-  
+
   .card-description {
-    -webkit-line-clamp: 1;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
+    line-height: 1.4;
+  }
+
+  .card-url {
+    font-size: 0.7rem;
   }
 }
 
