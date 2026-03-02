@@ -116,6 +116,12 @@
               <span>🎲</span> 随机
             </button>
           </div>
+
+          <div class="footer-info">
+            <span>© 2025 DevOps 导航</span>
+            <span class="divider">|</span>
+            <a href="https://beian.miit.gov.cn/" target="_blank" class="icp-link">豫ICP备2021025932号-2</a>
+          </div>
         </div>
       </footer>
     </div>
@@ -770,6 +776,32 @@ onMounted(() => {
   align-items: center;
   flex-wrap: wrap;
   gap: 16px;
+}
+
+.footer-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.8rem;
+  width: 100%;
+  justify-content: center;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  margin-top: 8px;
+}
+
+.footer-info .divider {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.footer-info .icp-link {
+  color: rgba(255, 255, 255, 0.6);
+  transition: color 0.3s;
+}
+
+.footer-info .icp-link:hover {
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .stats-overview {
